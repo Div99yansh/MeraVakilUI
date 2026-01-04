@@ -1,6 +1,8 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { DocumentType } from '../types/document.types';
 
+type ViewMode = 'create' | 'view';
+
 interface DocumentContextType {
   currentDocumentType: DocumentType | null;
   setCurrentDocumentType: (type: DocumentType | null) => void;
@@ -10,6 +12,11 @@ interface DocumentContextType {
   setQueryId: (id: string | null) => void;
   isGenerating: boolean;
   setIsGenerating: (loading: boolean) => void;
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
+  documentTitle: string | null;
+  setDocumentTitle: (title: string | null) => void;
+  resetToCreate: () => void;
 }
 
 const DocumentContext = createContext<DocumentContextType | undefined>(undefined);
@@ -19,6 +26,16 @@ export function DocumentProvider({ children }: { children: ReactNode }) {
   const [generatedDocument, setGeneratedDocument] = useState<string | null>(null);
   const [queryId, setQueryId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>('create');
+  const [documentTitle, setDocumentTitle] = useState<string | null>(null);
+
+  const resetToCreate = () => {
+    setCurrentDocumentType(null);
+    setGeneratedDocument(null);
+    setQueryId(null);
+    setViewMode('create');
+    setDocumentTitle(null);
+  };
 
   const value: DocumentContextType = {
     currentDocumentType,
@@ -29,6 +46,11 @@ export function DocumentProvider({ children }: { children: ReactNode }) {
     setQueryId,
     isGenerating,
     setIsGenerating,
+    viewMode,
+    setViewMode,
+    documentTitle,
+    setDocumentTitle,
+    resetToCreate,
   };
 
   return <DocumentContext.Provider value={value}>{children}</DocumentContext.Provider>;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Copy, Download, Check, Save } from 'lucide-react';
+import { Copy, Download, Check } from 'lucide-react';
 import { useDocument } from '../../context/DocumentContext';
 import { useDocuments } from '../../hooks/useDocuments';
 import { Button } from '../common/Button/Button';
@@ -9,6 +9,7 @@ import { Modal, ModalFooter } from '../common/Modal/Modal';
 import { Input } from '../common/Input/Input';
 import { downloadAsDocx, copyToClipboard } from '../../utils/downloadDocument';
 import { DOCUMENT_TYPE_LABELS } from '../../config/constants';
+import { normalizeDocType } from '../../config/documentFields.config';
 import toast from 'react-hot-toast';
 import styles from './DocumentOutput.module.css';
 
@@ -19,7 +20,7 @@ interface DocumentOutputProps {
 export function DocumentOutput({ content }: DocumentOutputProps) {
   const [copied, setCopied] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
-  const [documentTitle, setDocumentTitle] = useState('');
+  const [localDocumentTitle, setLocalDocumentTitle] = useState('');
   const { queryId, currentDocumentType } = useDocument();
   const { saveDocument } = useDocuments();
 
@@ -41,17 +42,17 @@ export function DocumentOutput({ content }: DocumentOutputProps) {
   };
 
   const handleSave = async () => {
-    if (!queryId || !currentDocumentType || !documentTitle.trim()) return;
+    if (!queryId || !currentDocumentType || !localDocumentTitle.trim()) return;
 
     try {
       await saveDocument.mutateAsync({
         query_id: queryId,
         document_type: currentDocumentType,
-        title: documentTitle.trim(),
+        title: localDocumentTitle.trim(),
         content,
       });
       setShowSaveModal(false);
-      setDocumentTitle('');
+      setLocalDocumentTitle('');
     } catch {
       // Error handled in hook
     }
@@ -68,7 +69,7 @@ export function DocumentOutput({ content }: DocumentOutputProps) {
         <GlassCard padding="none" className={styles.card}>
           <div className={styles.header}>
             <h3 className={styles.title}>
-              Generated {currentDocumentType ? DOCUMENT_TYPE_LABELS[currentDocumentType] : 'Document'}
+              Generated {currentDocumentType ? DOCUMENT_TYPE_LABELS[normalizeDocType(currentDocumentType)] : 'Document'}
             </h3>
             <div className={styles.actions}>
               <Button
@@ -86,14 +87,6 @@ export function DocumentOutput({ content }: DocumentOutputProps) {
                 leftIcon={<Download size={16} />}
               >
                 Download
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowSaveModal(true)}
-                leftIcon={<Save size={16} />}
-              >
-                Save
               </Button>
             </div>
           </div>
@@ -113,8 +106,8 @@ export function DocumentOutput({ content }: DocumentOutputProps) {
         <Input
           label="Document Title"
           placeholder="Enter a title for this document"
-          value={documentTitle}
-          onChange={(e) => setDocumentTitle(e.target.value)}
+          value={localDocumentTitle}
+          onChange={(e) => setLocalDocumentTitle(e.target.value)}
           fullWidth
         />
         <ModalFooter>
@@ -124,7 +117,7 @@ export function DocumentOutput({ content }: DocumentOutputProps) {
           <Button
             onClick={handleSave}
             isLoading={saveDocument.isPending}
-            disabled={!documentTitle.trim()}
+            disabled={!localDocumentTitle.trim()}
           >
             Save Document
           </Button>

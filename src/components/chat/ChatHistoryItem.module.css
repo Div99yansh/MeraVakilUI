@@ -70,3 +70,10 @@
   background: var(--color-error-bg);
   color: var(--color-error);
 }
+
+.deleteMessage {
+  margin: 0 0 var(--spacing-md) 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+}

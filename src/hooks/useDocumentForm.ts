@@ -5,10 +5,11 @@ import { DocumentType } from '../types/document.types';
 import { getFieldsForDocumentType, createValidationSchema } from '../config/documentFields.config';
 import { useDocument } from '../context/DocumentContext';
 import { useDocuments } from './useDocuments';
+import { DOCUMENT_TYPE_LABELS } from '../config/constants';
 
 export function useDocumentForm(documentType: DocumentType | null) {
-  const { setGeneratedDocument, setQueryId, setIsGenerating } = useDocument();
-  const { generatePlaint, generateWrittenStatement, generateNotice, generateAffidavit } =
+  const { setGeneratedDocument, setQueryId, setIsGenerating, setDocumentTitle } = useDocument();
+  const { generatePlaint, generateWrittenStatement, generateNotice, generateAffidavit, saveDocument } =
     useDocuments();
 
   const fields = useMemo(() => {
@@ -74,9 +75,35 @@ export function useDocumentForm(documentType: DocumentType | null) {
           break;
       }
 
-      if (response) {
-        setGeneratedDocument(response.data.draft_text);
-        setQueryId(response.data.query_id);
+      if (response && response.data.query_id) {
+        const draftText = response.data.draft_text;
+        const queryIdValue = response.data.query_id;
+
+        // Generate a title based on document type and parties
+        const plaintiff = document_base_fields.plaintiff as string || 'Unknown';
+        const defendant = document_base_fields.defendant as string || 'Unknown';
+        const docLabel = DOCUMENT_TYPE_LABELS[documentType] || documentType;
+        const generatedTitle = `${docLabel} - ${plaintiff} vs ${defendant}`;
+
+        // Auto-save the document
+        try {
+          await saveDocument.mutateAsync({
+            query_id: queryIdValue,
+            document_type: documentType,
+            title: generatedTitle,
+            content: draftText,
+          });
+
+          setGeneratedDocument(draftText);
+          setQueryId(queryIdValue);
+          setDocumentTitle(generatedTitle);
+        } catch (saveError) {
+          // Even if save fails, still show the document
+          console.error('Error auto-saving document:', saveError);
+          setGeneratedDocument(draftText);
+          setQueryId(queryIdValue);
+          setDocumentTitle(generatedTitle);
+        }
       }
     } catch (error) {
       console.error('Error generating document:', error);
@@ -89,7 +116,8 @@ export function useDocumentForm(documentType: DocumentType | null) {
     generatePlaint.isPending ||
     generateWrittenStatement.isPending ||
     generateNotice.isPending ||
-    generateAffidavit.isPending;
+    generateAffidavit.isPending ||
+    saveDocument.isPending;
 
   return {
     form,

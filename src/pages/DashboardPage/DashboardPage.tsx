@@ -7,7 +7,7 @@ import { useDocuments } from '../../hooks/useDocuments';
 import styles from './DashboardPage.module.css';
 
 export function DashboardPage() {
-  const { generatedDocument } = useDocument();
+  const { generatedDocument, viewMode } = useDocument();
   const { documents, isLoadingHistory } = useDocuments();
 
   return (
@@ -16,11 +16,21 @@ export function DashboardPage() {
         <Sidebar documents={documents} isLoading={isLoadingHistory} />
 
         <main className={styles.mainContent}>
-          <div className={styles.formSection}>
-            <DocumentForm />
-          </div>
+          {viewMode === 'create' && (
+            <>
+              <div className={styles.formSection}>
+                <DocumentForm />
+              </div>
 
-          {generatedDocument && (
+              {generatedDocument && (
+                <div className={styles.outputSection}>
+                  <DocumentOutput content={generatedDocument} />
+                </div>
+              )}
+            </>
+          )}
+
+          {viewMode === 'view' && generatedDocument && (
             <div className={styles.outputSection}>
               <DocumentOutput content={generatedDocument} />
             </div>

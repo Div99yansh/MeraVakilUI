@@ -12,12 +12,10 @@ interface SidebarProps {
 }
 
 export function Sidebar({ documents, isLoading }: SidebarProps) {
-  const { setCurrentDocumentType, setGeneratedDocument, setQueryId } = useDocument();
+  const { resetToCreate } = useDocument();
 
   const handleNewDocument = () => {
-    setCurrentDocumentType(null);
-    setGeneratedDocument(null);
-    setQueryId(null);
+    resetToCreate();
   };
 
   return (
