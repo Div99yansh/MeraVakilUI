@@ -1,0 +1,39 @@
+.wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.scrollArea {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color var(--transition-base);
+}
+
+.scrollArea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollArea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollArea::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: var(--radius-full);
+  transition: background var(--transition-base);
+}
+
+.showScrollbar {
+  scrollbar-color: var(--color-bg-hover) transparent;
+}
+
+.showScrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-bg-hover);
+}
+
+.showScrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary);
+}

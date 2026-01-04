@@ -1,0 +1,13 @@
+.wrapper {
+  position: relative;
+  border-radius: var(--border-radius);
+  padding: var(--border-width);
+  background: var(--gradient);
+}
+
+.content {
+  background: var(--color-bg-secondary);
+  border-radius: calc(var(--border-radius) - var(--border-width));
+  height: 100%;
+  width: 100%;
+}
