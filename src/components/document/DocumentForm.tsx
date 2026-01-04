@@ -7,7 +7,7 @@ import { DocumentTypeSelector } from './DocumentTypeSelector';
 import { FieldRenderer } from './FieldRenderer';
 import { Button } from '../common/Button/Button';
 import { GlassCard } from '../ui/GlassCard/GlassCard';
-import { BASE_FIELDS, DOCUMENT_SPECIFIC_FIELDS } from '../../config/documentFields.config';
+import { BASE_FIELDS, DOCUMENT_SPECIFIC_FIELDS, normalizeDocType } from '../../config/documentFields.config';
 import { DOCUMENT_TYPE_LABELS } from '../../config/constants';
 import styles from './DocumentForm.module.css';
 
@@ -36,7 +36,7 @@ export function DocumentForm() {
     );
   }
 
-  const specificFields = DOCUMENT_SPECIFIC_FIELDS[currentDocumentType];
+  const specificFields = DOCUMENT_SPECIFIC_FIELDS[normalizeDocType(currentDocumentType)];
 
   return (
     <div className={styles.container}>
@@ -45,7 +45,7 @@ export function DocumentForm() {
           Back
         </Button>
         <h2 className={styles.title}>
-          Generate {DOCUMENT_TYPE_LABELS[currentDocumentType]}
+          Generate {DOCUMENT_TYPE_LABELS[normalizeDocType(currentDocumentType)]}
         </h2>
       </div>
 
@@ -76,7 +76,7 @@ export function DocumentForm() {
 
             <GlassCard padding="lg" className={styles.section}>
               <h3 className={styles.sectionTitle}>
-                {DOCUMENT_TYPE_LABELS[currentDocumentType]} Details
+                {DOCUMENT_TYPE_LABELS[normalizeDocType(currentDocumentType)]} Details
               </h3>
               <div className={styles.fields}>
                 {specificFields.map((field) => (
