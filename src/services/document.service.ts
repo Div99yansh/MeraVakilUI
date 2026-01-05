@@ -9,6 +9,8 @@ import {
   SaveDocumentRequest,
   SaveDocumentResponse,
   DeleteDocumentResponse,
+  UpdateDocumentRequest,
+  UpdateDocumentResponse,
 } from '../types/document.types';
 
 // Timeout for LLM document generation (6 minutes to handle long processing times)
@@ -49,5 +51,9 @@ export const documentService = {
 
   deleteDocument: (id: string) => {
     return apiClient.delete<DeleteDocumentResponse>(`/documents/${id}`);
+  },
+
+  updateDocument: (data: UpdateDocumentRequest) => {
+    return apiClient.put<UpdateDocumentResponse>('/documents/update', data);
   },
 };

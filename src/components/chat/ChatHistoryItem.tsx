@@ -17,13 +17,14 @@ interface ChatHistoryItemProps {
 
 export function ChatHistoryItem({ document }: ChatHistoryItemProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const { setGeneratedDocument, setQueryId, setCurrentDocumentType, setViewMode, setDocumentTitle } =
+  const { setGeneratedDocument, setQueryId, setCurrentDocumentType, setViewMode, setDocumentTitle, setDocumentId } =
     useDocument();
   const { deleteDocument } = useDocuments();
 
   const handleClick = () => {
     setGeneratedDocument(document.content);
     setQueryId(document.query_id);
+    setDocumentId(document.id);
     setCurrentDocumentType(normalizeDocType(document.document_type));
     setViewMode('view');
     setDocumentTitle(document.title);

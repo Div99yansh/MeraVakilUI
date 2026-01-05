@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Copy, Download, Check } from 'lucide-react';
+import { Copy, Download, Check, Save } from 'lucide-react';
 import { useDocument } from '../../context/DocumentContext';
 import { useDocuments } from '../../hooks/useDocuments';
 import { Button } from '../common/Button/Button';
@@ -21,12 +21,18 @@ export function DocumentOutput({ content }: DocumentOutputProps) {
   const [copied, setCopied] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [localDocumentTitle, setLocalDocumentTitle] = useState('');
-  const { queryId, currentDocumentType } = useDocument();
-  const { saveDocument } = useDocuments();
+  const [editableContent, setEditableContent] = useState(content);
+  const { queryId, currentDocumentType, documentId, documentTitle, setGeneratedDocument } = useDocument();
+  const { saveDocument, updateDocument } = useDocuments();
+
+  // Sync editableContent with incoming content prop
+  useEffect(() => {
+    setEditableContent(content);
+  }, [content]);
 
   const handleCopy = async () => {
     try {
-      await copyToClipboard(content);
+      await copyToClipboard(editableContent);
       setCopied(true);
       toast.success('Copied to clipboard!');
       setTimeout(() => setCopied(false), 2000);
@@ -37,8 +43,28 @@ export function DocumentOutput({ content }: DocumentOutputProps) {
 
   const handleDownload = () => {
     const filename = `${currentDocumentType || 'document'}_${new Date().toISOString().split('T')[0]}`;
-    downloadAsDocx(content, filename);
+    downloadAsDocx(editableContent, filename);
     toast.success('Download started!');
+  };
+
+  const handleUpdateDocument = async () => {
+    if (!documentId || !currentDocumentType || !documentTitle) {
+      toast.error('Cannot save: document information missing');
+      return;
+    }
+
+    try {
+      const response = await updateDocument.mutateAsync({
+        document_id: documentId,
+        title: documentTitle,
+        content: editableContent,
+        document_type: currentDocumentType,
+      });
+      // Update the context with the new content from the response
+      setGeneratedDocument(response.data.document.content);
+    } catch {
+      // Error handled in hook
+    }
   };
 
   const handleSave = async () => {
@@ -49,7 +75,7 @@ export function DocumentOutput({ content }: DocumentOutputProps) {
         query_id: queryId,
         document_type: currentDocumentType,
         title: localDocumentTitle.trim(),
-        content,
+        content: editableContent,
       });
       setShowSaveModal(false);
       setLocalDocumentTitle('');
@@ -57,6 +83,8 @@ export function DocumentOutput({ content }: DocumentOutputProps) {
       // Error handled in hook
     }
   };
+
+  const hasChanges = editableContent !== content;
 
   return (
     <>
@@ -80,6 +108,18 @@ export function DocumentOutput({ content }: DocumentOutputProps) {
               >
                 {copied ? 'Copied!' : 'Copy'}
               </Button>
+              {documentId && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleUpdateDocument}
+                  leftIcon={<Save size={16} />}
+                  isLoading={updateDocument.isPending}
+                  disabled={!hasChanges}
+                >
+                  Save
+                </Button>
+              )}
               <Button
                 variant="ghost"
                 size="sm"
@@ -92,7 +132,11 @@ export function DocumentOutput({ content }: DocumentOutputProps) {
           </div>
 
           <div className={styles.content}>
-            <pre className={styles.document}>{content}</pre>
+            <textarea
+              className={styles.document}
+              value={editableContent}
+              onChange={(e) => setEditableContent(e.target.value)}
+            />
           </div>
         </GlassCard>
       </motion.div>

@@ -100,3 +100,15 @@ export interface SaveDocumentResponse {
 export interface DeleteDocumentResponse {
   message: string;
 }
+
+export interface UpdateDocumentRequest {
+  document_id: string;
+  title: string;
+  content: string;
+  document_type: string;
+}
+
+export interface UpdateDocumentResponse {
+  message: string;
+  document: SavedDocument;
+}

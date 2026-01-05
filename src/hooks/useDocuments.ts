@@ -6,6 +6,7 @@ import {
   GenerateNoticeRequest,
   GenerateAffidavitRequest,
   SaveDocumentRequest,
+  UpdateDocumentRequest,
 } from '../types/document.types';
 import toast from 'react-hot-toast';
 
@@ -108,6 +109,20 @@ export function useDocuments() {
     },
   });
 
+  // Update document mutation
+  const updateDocument = useMutation({
+    mutationFn: (data: UpdateDocumentRequest) => documentService.updateDocument(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['documents', 'history'] });
+      toast.success('Document updated successfully!');
+    },
+    onError: (error: unknown) => {
+      const err = error as { response?: { data?: { detail?: string } } };
+      const message = err.response?.data?.detail || 'Failed to update document';
+      toast.error(message);
+    },
+  });
+
   return {
     documents: documents || [],
     isLoadingHistory,
@@ -118,5 +133,6 @@ export function useDocuments() {
     generateAffidavit,
     saveDocument,
     deleteDocument,
+    updateDocument,
   };
 }
