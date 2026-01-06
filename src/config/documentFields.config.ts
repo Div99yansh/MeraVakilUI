@@ -81,8 +81,48 @@ export const DOCUMENT_SPECIFIC_FIELDS: Record<DocumentType, FieldConfig[]> = {
       placeholder: "e.g., CS 123/2024",
     },
     {
-      name: "reliefs_sought",
-      label: "Reliefs Sought",
+      name: "facts",
+      label: "Facts of the Case",
+      type: "textarea",
+      required: true,
+      placeholder:
+        "e.g., That there was a partnership firm in the name and style...",
+      rows: 5,
+      validation: z.string().min(20, "Please state the facts of the case"),
+    },
+    {
+      name: "dispute",
+      label: "Dispute b/w the Parties",
+      type: "textarea",
+      required: true,
+      placeholder:
+        "e.g., That the plaintiff has no other alternate except to file...",
+      rows: 5,
+      validation: z
+        .string()
+        .min(20, "Please state the dispute b/w the parties"),
+    },
+    {
+      name: "cause_of_action",
+      label: "Cause of Action",
+      type: "textarea",
+      required: true,
+      placeholder: "e.g., That the cause of action arose...",
+      rows: 3,
+      validation: z.string().min(20, "Please state the cause of action"),
+    },
+    {
+      name: "valuation",
+      label: "Valuation",
+      type: "textarea",
+      required: false,
+      placeholder:
+        "e.g., That the valuation for the purpose of jurisdiction...",
+      rows: 3,
+    },
+    {
+      name: "Prayer",
+      label: "Prayer/Reliefs Sought",
       type: "textarea",
       required: true,
       placeholder: "Describe the reliefs you are seeking...",
@@ -143,8 +183,8 @@ export const DOCUMENT_SPECIFIC_FIELDS: Record<DocumentType, FieldConfig[]> = {
       validation: z.string().min(50, "Please provide detailed defense grounds"),
     },
     {
-      name: "counter_claim",
-      label: "Counter Claim (if any)",
+      name: "additional_pleas",
+      label: "Additional Pleas (if any)",
       type: "textarea",
       required: false,
       placeholder: "Describe counter claim if applicable...",
