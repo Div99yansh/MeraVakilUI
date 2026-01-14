@@ -147,7 +147,7 @@ export const DOCUMENT_SPECIFIC_FIELDS: Record<DocumentType, FieldConfig[]> = {
     },
   ],
 
-  "written-statement": [
+  "written statement": [
     {
       name: "plaint_date",
       label: "Date of Plaint",
@@ -315,16 +315,22 @@ export const DOCUMENT_SPECIFIC_FIELDS: Record<DocumentType, FieldConfig[]> = {
 
 // Normalizing DocType files as per document_type receive via backend
 export function normalizeDocType(docType: string): DocumentType {
+  // Map both uppercase (from backend) and lowercase (from UI) to normalized format
   const mapping: Record<string, DocumentType> = {
+    // Uppercase from backend
     PLAINT: "plaint",
-    "WRITTEN STATEMENT": "written-statement",
+    "WRITTEN STATEMENT": "written statement",
     AFFIDAVIT: "affidavit",
     NOTICE: "notice",
+    // Lowercase from UI (already normalized)
+    plaint: "plaint",
+    "written statement": "written statement",
+    affidavit: "affidavit",
+    notice: "notice",
+    // Hyphenated format (fallback)
+    "written-statement": "written statement",
   };
-  return (
-    mapping[docType] ||
-    (docType.toLowerCase().replace(/\s+/g, "-") as DocumentType)
-  );
+  return mapping[docType] || (docType.toLowerCase() as DocumentType);
 }
 
 // Get all fields for a document type

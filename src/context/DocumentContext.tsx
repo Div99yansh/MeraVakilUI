@@ -18,6 +18,8 @@ interface DocumentContextType {
   setViewMode: (mode: ViewMode) => void;
   documentTitle: string | null;
   setDocumentTitle: (title: string | null) => void;
+  isSidebarCollapsed: boolean;
+  setIsSidebarCollapsed: (collapsed: boolean) => void;
   resetToCreate: () => void;
 }
 
@@ -31,6 +33,7 @@ export function DocumentProvider({ children }: { children: ReactNode }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('create');
   const [documentTitle, setDocumentTitle] = useState<string | null>(null);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const resetToCreate = () => {
     setCurrentDocumentType(null);
@@ -56,6 +59,8 @@ export function DocumentProvider({ children }: { children: ReactNode }) {
     setViewMode,
     documentTitle,
     setDocumentTitle,
+    isSidebarCollapsed,
+    setIsSidebarCollapsed,
     resetToCreate,
   };
 

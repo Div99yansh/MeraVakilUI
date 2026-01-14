@@ -1,27 +1,28 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { FileText, Shield, Zap, ArrowRight } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
-import { Button } from '../../components/common/Button/Button';
-import { ROUTES } from '../../config/constants';
-import styles from './LandingPage.module.css';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FileText, Shield, Zap, ArrowRight } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import { Button } from "../../components/common/Button/Button";
+import { ROUTES } from "../../config/constants";
+import styles from "./LandingPage.module.css";
 
 const FEATURES = [
   {
     icon: <FileText size={24} />,
-    title: 'Multiple Document Types',
-    description: 'Generate Plaints, Written Statements, Notices, and Affidavits',
+    title: "Multiple Document Types",
+    description:
+      "Generate Plaints, Written Statements, Notices, and Affidavits",
   },
   {
     icon: <Shield size={24} />,
-    title: 'Secure & Private',
-    description: 'Your documents are encrypted and securely stored',
+    title: "Secure & Private",
+    description: "Your documents are encrypted and securely stored",
   },
   {
     icon: <Zap size={24} />,
-    title: 'Fast Generation',
-    description: 'Get professionally formatted documents in seconds',
+    title: "Fast Generation",
+    description: "Get professionally formatted documents in minutes",
   },
 ];
 
@@ -76,8 +77,8 @@ export function LandingPage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
           >
-            Create legally sound documents with precision and ease. Designed for legal
-            professionals who demand excellence.
+            Create legally sound documents with precision and ease. Designed for
+            legal professionals who demand excellence.
           </motion.p>
 
           <motion.div
@@ -119,7 +120,9 @@ export function LandingPage() {
       </main>
 
       <footer className={styles.footer}>
-        <p>&copy; {new Date().getFullYear()} LegalDraft. All rights reserved.</p>
+        <p>
+          &copy; {new Date().getFullYear()} LegalDraft. All rights reserved.
+        </p>
       </footer>
     </div>
   );

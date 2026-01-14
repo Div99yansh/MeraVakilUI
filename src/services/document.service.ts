@@ -12,9 +12,13 @@ import {
   UpdateDocumentRequest,
   UpdateDocumentResponse,
 } from '../types/document.types';
+import { DocumentChatRequest, DocumentChatResponse } from '../types/chat.types';
 
 // Timeout for LLM document generation (6 minutes to handle long processing times)
 const GENERATION_TIMEOUT = 360000;
+
+// Timeout for chat responses (3 minutes)
+const CHAT_TIMEOUT = 180000;
 
 export const documentService = {
   generatePlaint: (data: GeneratePlaintRequest) => {
@@ -55,5 +59,11 @@ export const documentService = {
 
   updateDocument: (data: UpdateDocumentRequest) => {
     return apiClient.put<UpdateDocumentResponse>('/documents/update', data);
+  },
+
+  chatWithDocument: (data: DocumentChatRequest) => {
+    return apiClient.post<DocumentChatResponse>('/chat/document-assist', data, {
+      timeout: CHAT_TIMEOUT,
+    });
   },
 };

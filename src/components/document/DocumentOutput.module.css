@@ -57,6 +57,138 @@
   padding: 0;
 }
 
+.markdownContent {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-primary);
+}
+
+.markdownContent h1,
+.markdownContent h2,
+.markdownContent h3,
+.markdownContent h4,
+.markdownContent h5,
+.markdownContent h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.markdownContent h1 {
+  font-size: 1.75rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.3em;
+}
+
+.markdownContent h2 {
+  font-size: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.3em;
+}
+
+.markdownContent h3 {
+  font-size: 1.25rem;
+}
+
+.markdownContent h4 {
+  font-size: 1.1rem;
+}
+
+.markdownContent h5,
+.markdownContent h6 {
+  font-size: 1rem;
+}
+
+.markdownContent p {
+  margin: 1em 0;
+}
+
+.markdownContent ul,
+.markdownContent ol {
+  margin: 1em 0;
+  padding-left: 2em;
+}
+
+.markdownContent li {
+  margin: 0.5em 0;
+}
+
+.markdownContent strong,
+.markdownContent b {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.markdownContent em,
+.markdownContent i {
+  font-style: italic;
+}
+
+.markdownContent blockquote {
+  border-left: 3px solid var(--color-accent-gold);
+  padding-left: 1em;
+  margin: 1em 0;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.markdownContent hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2em 0;
+}
+
+.markdownContent code {
+  background: var(--color-bg-tertiary);
+  padding: 0.2em 0.4em;
+  border-radius: var(--radius-sm);
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+.markdownContent pre {
+  background: var(--color-bg-tertiary);
+  padding: 1em;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.markdownContent pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.markdownContent table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+.markdownContent th,
+.markdownContent td {
+  border: 1px solid var(--color-border);
+  padding: 0.5em 1em;
+  text-align: left;
+}
+
+.markdownContent th {
+  background: var(--color-bg-tertiary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.markdownContent a {
+  color: var(--color-accent-gold);
+  text-decoration: underline;
+}
+
+.markdownContent a:hover {
+  opacity: 0.8;
+}
+
 @media (max-width: 1200px) {
   .container {
     max-width: 100%;

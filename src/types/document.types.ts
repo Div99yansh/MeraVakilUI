@@ -1,4 +1,8 @@
-export type DocumentType = 'plaint' | 'written-statement' | 'notice' | 'affidavit';
+export type DocumentType =
+  | "plaint"
+  | "written statement"
+  | "notice"
+  | "affidavit";
 
 export interface DocumentBaseFields {
   plaintiff: string;

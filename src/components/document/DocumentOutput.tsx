@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Copy, Download, Check, Save } from 'lucide-react';
+import { Copy, Download, Check, Save, Edit2, Eye } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import { useDocument } from '../../context/DocumentContext';
 import { useDocuments } from '../../hooks/useDocuments';
 import { Button } from '../common/Button/Button';
@@ -22,6 +23,7 @@ export function DocumentOutput({ content }: DocumentOutputProps) {
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [localDocumentTitle, setLocalDocumentTitle] = useState('');
   const [editableContent, setEditableContent] = useState(content);
+  const [isEditMode, setIsEditMode] = useState(false);
   const { queryId, currentDocumentType, documentId, documentTitle, setGeneratedDocument } = useDocument();
   const { saveDocument, updateDocument } = useDocuments();
 
@@ -29,6 +31,10 @@ export function DocumentOutput({ content }: DocumentOutputProps) {
   useEffect(() => {
     setEditableContent(content);
   }, [content]);
+
+  const toggleEditMode = () => {
+    setIsEditMode(!isEditMode);
+  };
 
   const handleCopy = async () => {
     try {
@@ -103,6 +109,14 @@ export function DocumentOutput({ content }: DocumentOutputProps) {
               <Button
                 variant="ghost"
                 size="sm"
+                onClick={toggleEditMode}
+                leftIcon={isEditMode ? <Eye size={16} /> : <Edit2 size={16} />}
+              >
+                {isEditMode ? 'View' : 'Edit'}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handleCopy}
                 leftIcon={copied ? <Check size={16} /> : <Copy size={16} />}
               >
@@ -132,11 +146,17 @@ export function DocumentOutput({ content }: DocumentOutputProps) {
           </div>
 
           <div className={styles.content}>
-            <textarea
-              className={styles.document}
-              value={editableContent}
-              onChange={(e) => setEditableContent(e.target.value)}
-            />
+            {isEditMode ? (
+              <textarea
+                className={styles.document}
+                value={editableContent}
+                onChange={(e) => setEditableContent(e.target.value)}
+              />
+            ) : (
+              <div className={styles.markdownContent}>
+                <ReactMarkdown>{editableContent}</ReactMarkdown>
+              </div>
+            )}
           </div>
         </GlassCard>
       </motion.div>

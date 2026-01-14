@@ -1,16 +1,29 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo } from 'react';
-import { DocumentType } from '../types/document.types';
-import { getFieldsForDocumentType, createValidationSchema } from '../config/documentFields.config';
-import { useDocument } from '../context/DocumentContext';
-import { useDocuments } from './useDocuments';
-import { DOCUMENT_TYPE_LABELS } from '../config/constants';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo } from "react";
+import { DocumentType } from "../types/document.types";
+import {
+  getFieldsForDocumentType,
+  createValidationSchema,
+} from "../config/documentFields.config";
+import { useDocument } from "../context/DocumentContext";
+import { useDocuments } from "./useDocuments";
+import { DOCUMENT_TYPE_LABELS } from "../config/constants";
 
 export function useDocumentForm(documentType: DocumentType | null) {
-  const { setGeneratedDocument, setQueryId, setIsGenerating, setDocumentTitle } = useDocument();
-  const { generatePlaint, generateWrittenStatement, generateNotice, generateAffidavit, saveDocument } =
-    useDocuments();
+  const {
+    setGeneratedDocument,
+    setQueryId,
+    setIsGenerating,
+    setDocumentTitle,
+  } = useDocument();
+  const {
+    generatePlaint,
+    generateWrittenStatement,
+    generateNotice,
+    generateAffidavit,
+    saveDocument,
+  } = useDocuments();
 
   const fields = useMemo(() => {
     if (!documentType) return [];
@@ -24,7 +37,7 @@ export function useDocumentForm(documentType: DocumentType | null) {
 
   const form = useForm({
     resolver: schema ? zodResolver(schema) : undefined,
-    mode: 'onBlur',
+    mode: "onBlur",
   });
 
   const onSubmit = async (data: Record<string, unknown>) => {
@@ -34,7 +47,13 @@ export function useDocumentForm(documentType: DocumentType | null) {
 
     try {
       // Split data into base fields and specific fields
-      const baseFieldNames = ['plaintiff', 'defendant', 'advocate', 'nature_of_dispute', 'case_description'];
+      const baseFieldNames = [
+        "plaintiff",
+        "defendant",
+        "advocate",
+        "nature_of_dispute",
+        "case_description",
+      ];
       const document_base_fields: Record<string, unknown> = {};
       const document_specific_details: Record<string, unknown> = {};
 
@@ -49,25 +68,25 @@ export function useDocumentForm(documentType: DocumentType | null) {
       let response;
 
       switch (documentType) {
-        case 'plaint':
+        case "plaint":
           response = await generatePlaint.mutateAsync({
             document_base_fields: document_base_fields as never,
             document_specific_details: document_specific_details as never,
           });
           break;
-        case 'written-statement':
+        case "written statement":
           response = await generateWrittenStatement.mutateAsync({
             document_base_fields: document_base_fields as never,
             document_specific_details: document_specific_details as never,
           });
           break;
-        case 'notice':
+        case "notice":
           response = await generateNotice.mutateAsync({
             document_base_fields: document_base_fields as never,
             document_specific_details: document_specific_details as never,
           });
           break;
-        case 'affidavit':
+        case "affidavit":
           response = await generateAffidavit.mutateAsync({
             document_base_fields: document_base_fields as never,
             document_specific_details: document_specific_details as never,
@@ -80,8 +99,10 @@ export function useDocumentForm(documentType: DocumentType | null) {
         const queryIdValue = response.data.query_id;
 
         // Generate a title based on document type and parties
-        const plaintiff = document_base_fields.plaintiff as string || 'Unknown';
-        const defendant = document_base_fields.defendant as string || 'Unknown';
+        const plaintiff =
+          (document_base_fields.plaintiff as string) || "Unknown";
+        const defendant =
+          (document_base_fields.defendant as string) || "Unknown";
         const docLabel = DOCUMENT_TYPE_LABELS[documentType] || documentType;
         const generatedTitle = `${docLabel} - ${plaintiff} vs ${defendant}`;
 
@@ -99,14 +120,14 @@ export function useDocumentForm(documentType: DocumentType | null) {
           setDocumentTitle(generatedTitle);
         } catch (saveError) {
           // Even if save fails, still show the document
-          console.error('Error auto-saving document:', saveError);
+          console.error("Error auto-saving document:", saveError);
           setGeneratedDocument(draftText);
           setQueryId(queryIdValue);
           setDocumentTitle(generatedTitle);
         }
       }
     } catch (error) {
-      console.error('Error generating document:', error);
+      console.error("Error generating document:", error);
     } finally {
       setIsGenerating(false);
     }

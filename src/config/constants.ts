@@ -3,7 +3,7 @@ export const APP_VERSION = import.meta.env.VITE_APP_VERSION || "1.0.0";
 
 export const DOCUMENT_TYPE_LABELS: Record<string, string> = {
   plaint: "Plaint",
-  "written-statement": "Written Statement",
+  "written statement": "Written Statement",
   notice: "Notice",
   affidavit: "Affidavit",
 };
